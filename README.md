@@ -1,6 +1,7 @@
 <h1>test-react-custom-hooks</h1>
 
-
+[![Build Status](https://travis-ci.com/seth-wat/test-react-custom-hooks.svg?branch=master)](https://travis-ci.com/seth-wat/test-react-custom-hooks)
+![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
 > Invariant Violation: Hooks can only be called inside the body of a function component.
 
 That's the error message we all get our first attempt at testing a hook. 
