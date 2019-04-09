@@ -1,12 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import {Exposer} from "./exposer/exposer";
+import ReactDOM from "react-dom";
+import React from "react";
+import {WrapCustomHook, WrapUseState} from "./wrapper";
 
-ReactDOM.render(<App />, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+export const exposeHook = (hook, parameters) => {
+    const exposer = new Exposer()
+    parameters !== undefined ?
+        ReactDOM.render(
+            <WrapCustomHook hook={hook} setExposedHook={exposer.setExposedHook} vals={parameters}/>,
+            document.createElement('div')
+        )
+        :
+        ReactDOM.render(
+            <WrapUseState hook={hook} setExposedHook={exposer.setExposedHook}/>,
+            document.createElement('div')
+        )
+    return exposer.getExposedHook
+}

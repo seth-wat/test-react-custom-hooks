@@ -1,0 +1,16 @@
+language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - '11.7.0'
+jobs:
+  include:
+    - stage: install
+      script:
+        - yarn install
+    - stage: test
+      script:
+        - yarn test

@@ -1,10 +1,10 @@
 {
-  "name": "cra-react-test-use-state",
+  "name": "test-react-custom-hooks",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
     "react-scripts": "2.1.8"
   },
   "scripts": {
@@ -21,5 +21,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "react-testing-library": "6.1.2"
+  }
 }

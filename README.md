@@ -1,68 +1,72 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1>test-react-custom-hooks</h1>
 
-## Available Scripts
 
-In the project directory, you can run:
+> Invariant Violation: Hooks can only be called inside the body of a function component.
 
-### `npm start`
+That's the error message we all get our first attempt at testing a hook. 
+This is a little library that solves that violation so that they may be unit tested like any other function.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* 0 dependencies excluding react and react-dom
+* super simple and un-opinionated api
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### e.g, here's a hook
 
-### `npm test`
+```javascript
+import {useState, useEffect} from 'react'
+export const useDescription = (initialDescription) => {
+    const [description, setDescription] = useState(initialDescription)
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    useEffect(() => {
+        // it just appends a ! to whatever the input string is
+        setDescription(description + "!")
+    })
 
-### `npm run build`
+    return {description, setDescription}
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+}
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### i.e, here's a test
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```javascript
+it("should exclam", () => {
 
-### `npm run eject`
+  let exposer
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  act(() => {
+    // call the exposeHook function with the hook and any params, useDescription(description: string)
+    exposer = exposeHook(useDescription, ['ez pz hook testing'])
+  })
+  
+  // when exposer() is called, it gives you the hooks return value, {description, setDescription}
+  expect(exposer().description).toEqual('ez pz hook testing!')
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  // anytime you dispatch a change, you MUST wrap it in react-dom's act function
+  act(() => {
+    exposer().setDescription('no dependencies')
+  })
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  // make sure your assertions are OUTSIDE of act!
+  expect(exposer().description).toEqual('no dependencies!')
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  // seriously don't forget to use act
+  act(() => {
+    exposer().setDescription("such unit tests, much wow")
+  })
+  
+  // always call exposer when retrieving a value
+  expect(exposer().description).toEqual('such unit tests, much wow!')
+  
+})
+```
 
-## Learn More
+### API
+### `exposeHook(hook [, parameters: []])`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The above given example is the most common use case of the API. There's a few things to note:
+- To pass arguments into a hook `useMagic(a, b, c)` pass an array to parameters:
+ `exposeHook(useMagic, ['foo', 'rah', 'doh'])`
+- Regarding [act](https://reactjs.org/docs/test-utils.html#act)
+    - `exposeHook` calls must be wrapped
+    - any calls to the exposed hook that modify state must be wrapped
+    - assertions must be after the `act` call
