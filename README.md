@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/seth-wat/test-react-custom-hooks.svg?branch=master)](https://travis-ci.com/seth-wat/test-react-custom-hooks)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
+
 > Invariant Violation: Hooks can only be called inside the body of a function component.
 
 That's the error message we all get our first attempt at testing a hook. 
@@ -9,6 +10,8 @@ This is a little library that solves that violation so that they may be unit tes
 
 * 0 dependencies excluding react and react-dom
 * super simple and un-opinionated api
+
+`yarn install test-react-custom-hooks`
 
 ### e.g, here's a hook
 
