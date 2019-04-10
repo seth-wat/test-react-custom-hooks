@@ -11,8 +11,6 @@ This is a little library that solves that violation so that they may be unit tes
 * 0 dependencies excluding react and react-dom
 * super simple and un-opinionated api
 
-`yarn install test-react-custom-hooks`
-
 ### e.g, here's a hook
 
 ```javascript
