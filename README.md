@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/seth-wat/test-react-custom-hooks.svg?branch=master)](https://travis-ci.com/seth-wat/test-react-custom-hooks)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
+<a href="#badge"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>
 
 > Invariant Violation: Hooks can only be called inside the body of a function component.
 
@@ -14,52 +15,48 @@ This is a little library that solves that violation so that they may be unit tes
 ### e.g, here's a hook
 
 ```javascript
-import {useState, useEffect} from 'react'
-export const useDescription = (initialDescription) => {
-    const [description, setDescription] = useState(initialDescription)
+export const useDescription = initialDescription => {
+  const [description, setDescription] = useState(initialDescription);
 
-    useEffect(() => {
-        // it just appends a ! to whatever the input string is
-        setDescription(description + "!")
-    })
+  useEffect(() => {
+    // it just appends a ! to whatever the input string is
+    setDescription(description + "!");
+  });
 
-    return {description, setDescription}
-
-}
+  return { description, setDescription };
+};
 ```
 
 ### i.e, here's a test
 
 ```javascript
 it("should exclam", () => {
-
-  let exposer
+  let exposer;
 
   act(() => {
     // call the exposeHook function with the hook and any params, useDescription(description: string)
-    exposer = exposeHook(useDescription, ['ez pz hook testing'])
-  })
-  
+    exposer = exposeHook(useDescription, ["ez pz hook testing"]);
+  });
+
   // when exposer() is called, it gives you the hooks return value, {description, setDescription}
-  expect(exposer().description).toEqual('ez pz hook testing!')
+  expect(exposer().description).toEqual("ez pz hook testing!");
 
   // anytime you dispatch a change, you MUST wrap it in react-dom's act function
   act(() => {
-    exposer().setDescription('no dependencies')
-  })
+    exposer().setDescription("no dependencies");
+  });
 
   // make sure your assertions are OUTSIDE of act!
-  expect(exposer().description).toEqual('no dependencies!')
+  expect(exposer().description).toEqual("no dependencies!");
 
   // seriously don't forget to use act
   act(() => {
-    exposer().setDescription("such unit tests, much wow")
-  })
-  
+    exposer().setDescription("such unit tests, much wow");
+  });
+
   // always call exposer when retrieving a value
-  expect(exposer().description).toEqual('such unit tests, much wow!')
-  
-})
+  expect(exposer().description).toEqual("such unit tests, much wow!");
+});
 ```
 
 ### API

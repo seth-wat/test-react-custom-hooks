@@ -1,15 +1,13 @@
 export class Exposer {
+  constructor() {
+    this.exposedHook = null;
+  }
 
-    constructor() {
-        this.exposedHook = null
-    }
+  setExposedHook = hook => {
+    this.exposedHook = hook;
+  };
 
-    setExposedHook = (hook) => {
-        this.exposedHook = hook
-    }
-
-    getExposedHook = () => {
-        return this.exposedHook
-    }
-
+  getExposedHook = () => {
+    return this.exposedHook;
+  };
 }
